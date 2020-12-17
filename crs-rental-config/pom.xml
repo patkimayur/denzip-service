@@ -1,0 +1,101 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>crs-rental-service</artifactId>
+        <groupId>com.crs.rental</groupId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>crs-rental-config</artifactId>
+    <packaging>pom</packaging>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.soebes.maven.plugins</groupId>
+                <artifactId>iterator-maven-plugin</artifactId>
+                <version>0.5.0</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>iterator</goal>
+                        </goals>
+                        <configuration>
+                            <items>
+                                <item>crs-172.31.26.127-prod1</item>
+                                <item>crs-172.31.27.162-prod2</item>
+                                <item>crs-172.31.21.163-prod3</item>
+                                <item>YJ</item>
+                                <item>mayur</item>
+                            </items>
+                            <pluginExecutors>
+                                <pluginExecutor>
+                                    <plugin>
+                                        <groupId>org.codehaus.mojo</groupId>
+                                        <artifactId>properties-maven-plugin</artifactId>
+                                        <version>1.0.0</version>
+                                    </plugin>
+                                    <goal>read-project-properties</goal>
+                                    <configuration>
+                                        <files>
+                                            <file>${project.basedir}/environments/@item@.properties</file>
+                                        </files>
+                                    </configuration>
+                                </pluginExecutor>
+
+                                <pluginExecutor>
+                                    <plugin>
+                                        <groupId>org.apache.maven.plugins</groupId>
+                                        <artifactId>maven-resources-plugin</artifactId>
+                                        <version>3.1.0</version>
+                                    </plugin>
+                                    <goal>copy-resources</goal>
+                                    <configuration>
+                                       <filters>
+                                           <filter>${project.basedir}/environments/@item@.properties</filter>
+                                       </filters>
+                                        <delimiters>
+                                            <delimeter>{{*}}</delimeter>
+                                        </delimiters>
+                                        <resources>
+                                            <resource>
+                                                <directory>templates</directory>
+                                                <filtering>true</filtering>
+                                            </resource>
+                                        </resources>
+                                        <outputDirectory>${project.build.outputDirectory}/config/@item@</outputDirectory>
+                                    </configuration>
+                                </pluginExecutor>
+                            </pluginExecutors>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.8</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <configuration>
+                            <target>
+                                <echo>run chmod in ${project.build.outputDirectory}/config/</echo>
+                                <chmod file="${project.build.outputDirectory}/config/crs-172.31.26.127-prod1/startCrsServer.sh" perm="ugo+rx" />
+                                <chmod file="${project.build.outputDirectory}/config/crs-172.31.27.162-prod2/startCrsServer.sh" perm="ugo+rx" />
+                                <chmod file="${project.build.outputDirectory}/config/crs-172.31.21.163-prod3/startCrsServer.sh" perm="ugo+rx" />
+                                <chmod file="${project.build.outputDirectory}/config/mayur/startCrsServer.sh" perm="ugo+rx" />
+                                <chmod file="${project.build.outputDirectory}/config/YJ/startCrsServer.sh" perm="ugo+rx" />
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+
+</project>

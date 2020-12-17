@@ -1,0 +1,12 @@
+**/target/
+**/.classpath
+**/.project
+**/.settings/
+**/.idea/
+**/*.log
+**/*.zip
+**/images/
+**/*.jpeg
+crs-rental-core/**/application.properties
+crs-rental-core/**/logback.xml
+crs-rental-core/**/startCrsServer.sh

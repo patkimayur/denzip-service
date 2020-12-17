@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <appender name="CONSOLE_REF" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="PERFORMANCE_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>{{APP_HOME}}/logs/denzip-performance.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>{{APP_HOME}}/logs/denzip-performance-%d{yyyy-MM-dd}.%i.zip</fileNamePattern>
+            <maxFileSize>300MB</maxFileSize>
+            <maxHistory>10</maxHistory>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="fileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>{{APP_HOME}}/logs/denzip.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>{{APP_HOME}}/logs/denzip-%d{yyyy-MM-dd}.%i.zip</fileNamePattern>
+            <maxFileSize>300MB</maxFileSize>
+            <maxHistory>10</maxHistory>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="ASYNCFILE" class="ch.qos.logback.classic.AsyncAppender">
+        <queueSize>10000</queueSize>
+        <discardingThreshold>0</discardingThreshold>
+        <appender-ref ref="fileAppender"/>
+    </appender>
+
+
+    <appender name="CONSOLE" class="ch.qos.logback.classic.AsyncAppender">
+        <queueSize>10000</queueSize>
+        <discardingThreshold>0</discardingThreshold>
+        <appender-ref ref="CONSOLE_REF"/>
+    </appender>
+
+    <appender name="PERFORMANCE" class="ch.qos.logback.classic.AsyncAppender">
+        <queueSize>10000</queueSize>
+        <discardingThreshold>0</discardingThreshold>
+        <appender-ref ref="PERFORMANCE_FILE"/>
+    </appender>
+
+
+    <root level="ERROR">
+        <appender-ref ref="ASYNCFILE"/>
+        {{ADDITIONAL_APPENDER}}
+    </root>
+
+    <logger name="com.crs.denzip" level="DEBUG"/>
+    <logger name="org.springframework" level="ERROR"/>
+
+
+    <!--<logger name="com.crs.denzip.model.monitor.MonitorTimeAspect" level="INFO" addivity="false">-->
+    <!--<appender-ref ref="PERFORMANCE"/>-->
+    <!--</logger>-->
+</configuration>
+
